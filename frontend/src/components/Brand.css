@@ -1,0 +1,13 @@
+.uil-brand { display:flex; align-items:center; gap:12px; min-width:0; color:var(--text-primary,var(--screen-text)); }
+.uil-brand-logo { display:block; width:64px; height:46px; flex-shrink:0; object-fit:contain; background:#fff; padding:3px; border:1px solid #e2e8f0; border-radius:5px; }
+.uil-brand-wordmark { display:flex; flex-direction:column; gap:3px; min-width:0; }
+.uil-brand-wordmark > strong { font-size:17px; font-weight:650; line-height:1.2; letter-spacing:-.025em; white-space:nowrap; }
+.uil-brand-wordmark > span { color:var(--text-secondary,var(--screen-muted)); font-size:10px; line-height:1.4; }
+.uil-brand-wordmark b { font-weight:650; letter-spacing:.04em; color:var(--accent,var(--screen-accent)); }
+.uil-brand-compact .uil-brand-logo { width:54px; height:36px; padding:2px; }
+.uil-brand-compact .uil-brand-wordmark > strong { font-size:16px; }
+.uil-mobile-brand { display:none; }
+.sidebar-brand:has(.uil-brand) { padding:0; margin-bottom:28px; }
+@media(max-width:768px) { .uil-mobile-brand { display:block; margin-bottom:14px; } .topbar-left { min-width:0; } }
+@media(max-width:480px) { .display-header .uil-brand { gap:8px; } .display-header .uil-brand-wordmark > strong { font-size:14px; } .display-header .uil-brand-wordmark > span { font-size:10px; } }
+@media(max-width:650px) { .display-header:has(.uil-brand) { flex-wrap:wrap; gap:8px; } .display-header:has(.uil-brand) .display-clock { flex-direction:row; flex-wrap:wrap; gap:8px; align-items:baseline; } }

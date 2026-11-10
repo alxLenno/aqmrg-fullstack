@@ -1,0 +1,84 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: aqmrg-backend
+    restart: unless-stopped
+    ports:
+      - "5001:5001"
+    environment:
+      - FLASK_ENV=production
+      - NODE_ONLINE_MINUTES=5
+      - ACTIVE_NODE_MINUTES=15
+    volumes:
+      - backend_data:/app
+    networks:
+      - aqmrg-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: aqmrg-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:5001
+      - VITE_GRAFANA_DASHBOARD_URL=http://localhost:3000/d/air_quality_dash/air-quality-real-time-monitor?orgId=1&kiosk
+    depends_on:
+      - backend
+    networks:
+      - aqmrg-network
+
+  influxdb:
+    build:
+      context: ./infrastructure/monitoring/influxdb
+      dockerfile: Dockerfile
+    container_name: aqmrg-influxdb
+    restart: unless-stopped
+    ports:
+      - "8086:8086"
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=${INFLUXDB_USER:-aqmrg}
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${INFLUXDB_PASSWORD:-aqmrg_password_change_me}
+      - DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB_ORG:-aqmrg}
+      - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_BUCKET:-sensor_data}
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_TOKEN:-your_influxdb_token_change_me}
+      - INFLUXD_REPORTING_DISABLED=true
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+    networks:
+      - aqmrg-network
+
+  grafana:
+    build:
+      context: ./infrastructure/monitoring/grafana
+      dockerfile: Dockerfile
+    container_name: aqmrg-grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ALLOW_EMBEDDING=true
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Editor
+      - INFLUXDB_TOKEN=${INFLUXDB_TOKEN:-your_influxdb_token_change_me}
+      - INFLUXDB_URL=http://influxdb:8086
+    depends_on:
+      - influxdb
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - aqmrg-network
+
+networks:
+  aqmrg-network:
+    driver: bridge
+
+volumes:
+  backend_data:
+  influxdb_data:
+  grafana_data:

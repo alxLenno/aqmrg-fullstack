@@ -1,0 +1,7 @@
+.map-source-control { background: #fff; color: #1e293b; padding: 8px 10px; border: 1px solid #b8c4d0; border-radius: 8px; box-shadow: 0 2px 8px #0002; max-width: min(300px, 65vw); font: 12px/1.4 system-ui, sans-serif; }
+.map-source-control label { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+.map-source-control select { background: #fff; color: #1e293b; border: 1px solid #94a3b8; border-radius: 4px; padding: 5px; max-width: 165px; font: inherit; cursor: pointer; }
+.map-source-control select:focus-visible { outline: 2px solid #0284c7; outline-offset: 2px; }
+.map-source-notice { margin: 6px 0 0 !important; color: #475569; font-size: 11px; }
+.map-source-notice:empty { display: none; }
+.maplibregl-map { background: transparent; }
